@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="harpoon",
-    version="0.1.6",
+    version="0.1.7",
     description="Another OSINT CLI tool",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -20,8 +20,8 @@ setup(
         "tweepy>=3.8.0",
         "passivetotal>=2.5.9",
         "beautifulsoup4==4.11.1",
-        "lxml==4.6.5",
-        "censys==2.0.9",
+        "lxml==4.9.1",
+        "censys==2.1.7",
         "shodan",
         "fullcontact.py",
         "pyhunter",
@@ -45,7 +45,7 @@ setup(
         "pybinaryedge==0.5",
         "spyonweb==0.1",
         "pythreatgrid2==0.1.1",
-        "pycrtsh==0.3.7",
+        "pycrtsh==0.3.10",
         "pysafebrowsing==0.1.2",
         "pysecuritytrails==0.1.3",
         "phonenumbers==8.12.4",

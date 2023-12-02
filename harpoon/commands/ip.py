@@ -1,19 +1,20 @@
 #! /usr/bin/env python
 import glob
 import os
-import re
 import shutil
 import socket
 import subprocess
 import sys
 import urllib
 import urllib.request
+
 import geoip2.database
 import pyasn
+from IPy import IP
+
 from harpoon.commands.asn import CommandAsn
 from harpoon.commands.base import Command
-from harpoon.lib.utils import unbracket, is_ip
-from IPy import IP
+from harpoon.lib.utils import is_ip, unbracket
 
 
 class CommandIp(Command):
@@ -54,26 +55,24 @@ class CommandIp(Command):
     def update(self):
         print("Downloading AS data")
         file_name, headers = urllib.request.urlretrieve(
-            "http://www.cidr-report.org/as2.0/autnums.html"
+            "https://ftp.ripe.net/ripe/asnames/asn.txt"
         )
+        if os.path.isfile(self.asnname):
+            os.remove(self.asnname)
         fin = open(file_name, "r", encoding="latin-1", errors="ignore")
         fout = open(self.asnname, "w+")
         line = fin.readline()
-        reg = re.compile(
-            r'^<a href="/cgi-bin/as-report\?as=AS\d+&view=2.0">AS(\d+)\s*</a> (.+)$'
-        )
         while line != "":
-            res = reg.match(line)
-            if res:
-                fout.write("%s|%s\n" % (res.group(1), res.group(2)))
+            asn = line.split(" ")[0]
+            asname = " ".join(line.split(" ")[1:]).strip()
+            fout.write("{}|{}\n".format(asn, asname))
             line = fin.readline()
         fin.close()
         fout.close()
+
         print("Downloading CIDR data")
-        try:
+        if os.path.isfile(self.asncidr):
             os.remove(self.asncidr)
-        except OSError:
-            pass
         os.chdir("/tmp")
         subprocess.call(["pyasn_util_download.py", "--latest"])
         ls = glob.glob("rib*.bz2")[0]

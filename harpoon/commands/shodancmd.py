@@ -1,7 +1,9 @@
 #! /usr/bin/env python
 import json
-from dateutil.parser import parse
+
 import shodan
+from dateutil.parser import parse
+
 from harpoon.commands.base import Command, Subcommand
 from harpoon.lib.utils import unbracket
 
@@ -193,7 +195,7 @@ class CommandShodan(Command):
         self.add_subcommand(SubcommandSsh)
         self.add_subcommand(SubcommandQuota)
 
-    def intel_ip(self, query, data, conf):
+    def intel_ip(self, query, data):
         print("[+] Checking Shodan...")
         api = shodan.Shodan(self._config_data['Shodan']['key'])
         try:

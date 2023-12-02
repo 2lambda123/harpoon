@@ -2,8 +2,9 @@
 import os
 import sys
 import traceback
+
 from harpoon.commands.base import Command
-from harpoon.lib.utils import unbracket, is_ip
+from harpoon.lib.utils import is_ip, unbracket
 
 
 class CommandIntel(Command):
@@ -78,14 +79,18 @@ class CommandIntel(Command):
                 ))
             print("")
 
-    def print_passive_dns(self, passive_dns):
+    def print_passive_dns(self, passive_dns, domain=True):
         if len(passive_dns) > 0:
             print("----------------- Passive DNS")
             for r in sorted(passive_dns, key=lambda x: x["first"], reverse=True):
+                if domain:
+                    el = r["domain"]
+                else:
+                    el = r["ip"]
                 print(
                     "[+] %-40s (%s -> %s)(%s)"
                     % (
-                        r["ip"],
+                        el,
                         r["first"].strftime("%Y-%m-%d"),
                         r["last"].strftime(
                             "%Y-%m-%d") if r["last"] else "",
@@ -178,7 +183,7 @@ class CommandIntel(Command):
         self.print_malware(data["malware"])
         self.print_files(data["files"])
         self.print_urls(data["urls"])
-        self.print_passive_dns(data["passive_dns"])
+        self.print_passive_dns(data["passive_dns"], domain=False)
 
         if len(data['subdomains']) > 0:
             print('-------------------- Subdomains')
